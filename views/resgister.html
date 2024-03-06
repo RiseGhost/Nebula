@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.0/bignumber.min.js"></script>
+    <title>Register</title>
+</head>
+<body>
+    <form method="post" id="res_form" action="/r">
+        <input type="email" name="email" value="h@gmail.com">
+        <input type="password" name="password" value="45">
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+        document.getElementById("res_form").addEventListener('submit', (e) => {
+            e.preventDefault()
+            var formData = new FormData(document.getElementById("res_form"))
+            fetch('/r', {
+                method: 'POST',
+                body: formData
+            }).then((response) => {console.log(response)})
+        })
+        
+    </script>
+</body>
+<script src="./script/socket_key.js"></script>
+</html>
