@@ -6,13 +6,7 @@ const port = process.env.PORT
 const app = express()
 const multer = require('multer');
 const upload = multer();
-
-function CreateUser(req,res,next){
-  console.log("CreateUser")
-  const {email, password} = req.body
-  console.log(email,password)
-  next()
-}
+const CreateUser = require('./models/create')
 
 app.use(seccions({
   secret: 'keyboard cat',
@@ -24,7 +18,7 @@ app.use(express.static('public'))
 app.use(BodyParse.urlencoded({extended:false}))
 app.use(BodyParse.json())
 
-app.get('/', function (req, res) {
+app.get('/', function (req ,res) {
   console.log(req.session)
   res.sendFile('./views/index.html', {root: __dirname})
 })
@@ -36,6 +30,7 @@ app.get('/resgister', (req,res) => {
 app.post('/r', CreateUser, (req,res) => {
   const {email, password} = req.body
   //console.log(email,password)
+  console.log(req.validat)
   res.sendStatus(200)
 })
 
