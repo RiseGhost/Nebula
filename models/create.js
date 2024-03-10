@@ -1,20 +1,21 @@
 const User = require('./user')
 
-function CreateUser(req,res,next){
+async function CreateUser(req, res, next) {
+    const lastindex = await User.count()
     console.log("CreateUser")
-    const {name,email,password} = req.body
-    console.log(name,email,password)
-    if (name != "" && email != "" && password != ""){
+    const { name, email, password } = req.body
+    console.log(name, email, password)
+    if (name != "" && email != "" && password != "") {
         User.create({
             name: name,
             password: password,
             email: email,
             private_key: "aaaaaaaaaaaaaaaaaaaaaaaaaa",
-            dir_server: "./"
+            dir_server: "./" + (lastindex + 1)
         })
         req.validat = true
     }
-    else{
+    else {
         req.validat = false
     }
     next()

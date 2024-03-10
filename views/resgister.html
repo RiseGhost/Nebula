@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.0/bignumber.min.js"></script>
     <title>Register</title>
 </head>
+
 <body>
     <form method="post" id="res_form" action="/r">
         <input type="email" name="email" value="h@gmail.com">
@@ -20,10 +22,11 @@
             fetch('/r', {
                 method: 'POST',
                 body: formData
-            }).then((response) => {console.log(response)})
+            }).then((response) => response.json()).then(data => console.log(data))
         })
-        
+
     </script>
 </body>
 <script src="./script/socket_key.js"></script>
+
 </html>
