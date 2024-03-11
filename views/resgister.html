@@ -25,7 +25,7 @@
             }).then((response) => response.json()).then(data => {
                 console.log(data)
                 console.log(data.port_user)
-                const socket = new WebSocket("ws://192.168.1.92:" + data.port_user)
+                const socket = new WebSocket("ws://89.114.85.241:" + data.port_user)
                 socket.onopen = () => {console.log("Connectado com sucesso")}
                 socket.onmessage = (msg) => {
                     console.log(msg)
