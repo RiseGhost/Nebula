@@ -1,4 +1,5 @@
 require('dotenv').config()
+const { exec } = require('child_process')
 const express = require('express')
 const seccions = require('express-session')
 const BodyParse = require('body-parser')
@@ -29,11 +30,21 @@ app.get('/resgister', (req, res) => {
 })
 
 app.post('/r', CreateUser, (req, res) => {
-  if (req.validat)
+  if (req.validat){
+    const port_user = getPort()
+    const command = "node ./services/InitUserEnv.js " + port_user + " " + req.id
+
+    exec(command, (error,stdout,stderr) => {
+      if (error) console.log(error)
+      if (stderr) console.log(stderr)
+      console.log(stdout)
+    })
+
     res.json({
-      port: getPort(),
+      port_user: port_user,
       status: "Create Sucess"
     })
+  }
   else
     res.json({status: "Erro create User"})
 })

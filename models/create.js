@@ -14,6 +14,7 @@ async function CreateUser(req, res, next) {
             dir_server: "./" + (lastindex + 1)
         })
         req.validat = true
+        req.id = (lastindex + 1)
     }
     else {
         req.validat = false
