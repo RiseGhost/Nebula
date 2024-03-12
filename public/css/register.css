@@ -28,6 +28,10 @@ h1 {
 }
 
 form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     position: absolute;
     margin: auto;
     z-index: 10;
@@ -36,8 +40,9 @@ form {
 form input {
     margin: 5px;
     border: none;
-    border-radius: 10%;
+    border-radius: 6px;
     background-color: #5A5A5A;
+    padding: 3px;
 }
 
 #back_layer_1 {
