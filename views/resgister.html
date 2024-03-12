@@ -23,26 +23,7 @@
             <input type="submit" value="Submit">
         </form>
     </div>
-    <script>
-        document.getElementById("res_form").addEventListener('submit', (e) => {
-            e.preventDefault()
-            var formData = new FormData(document.getElementById("res_form"))
-            fetch('/r', {
-                method: 'POST',
-                body: formData
-            }).then((response) => response.json()).then(data => {
-                console.log(data)
-                console.log(data.port_user)
-                const socket = new WebSocket("ws://89.114.85.241:" + data.port_user)
-                socket.onopen = () => { console.log("Connectado com sucesso") }
-                socket.onmessage = (msg) => {
-                    console.log(msg)
-                }
-            })
-        })
-
-    </script>
 </body>
 <script src="./script/socket_key.js"></script>
-
+<script src="./script/send_register.js"></script>
 </html>
