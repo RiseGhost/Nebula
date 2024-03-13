@@ -17,9 +17,9 @@ const child = exec(command, (error, stdout, stderr) => {
 const ws = new WebSocket.Server({ port: port })
 
 ws.on('connection', (ws) => {
-    ws.send("Criando ambiente")
+    ws.send("Creating enveroment")
     child.on('exit', (code,signal) => {
-        ws.send("Ambiente finalizado.")
+        ws.send("Envoroment finished.")
         ws.close()
     })
 })

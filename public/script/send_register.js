@@ -12,10 +12,15 @@ document.getElementById("res_form").addEventListener('submit', (e) => {
     }).then((response) => response.json()).then(data => {
         console.log(data)
         console.log(data.port_user)
-        const socket = new WebSocket("ws://89.114.85.241:" + data.port_user)
-        socket.onopen = () => { console.log("Connectado com sucesso") }
-        socket.onmessage = (msg) => {
-            console.log(msg)
+        try{
+            document.getElementById("loding").style.visibility = "visible"
+            const socket = new WebSocket("ws://89.114.85.241:" + data.port_user)
+            socket.onopen = () => { console.log("Connectado com sucesso") }
+            socket.onmessage = (msg) => {
+                document.getElementById("status").innerHTML = msg.data
+            }
+        }   catch(e){
+            alert("Erro to create user. Please try again.")
         }
     })
 })

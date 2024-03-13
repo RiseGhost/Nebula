@@ -25,16 +25,22 @@ app.get('/', function (req, res) {
   res.sendFile('./views/index.html', { root: __dirname })
 })
 
+app.get('/s', (req,res) => {
+  req.session.user = true
+  console.log(req.session)
+  res.send("Cona")
+})
+
 app.get('/resgister', (req, res) => {
   res.sendFile('./views/resgister.html', { root: __dirname })
 })
 
 app.post('/r', CreateUser, (req, res) => {
-  if (req.validat){
+  if (req.validat) {
     const port_user = getPort()
     const command = "node ./services/InitUserEnv.js " + port_user + " " + req.id
 
-    exec(command, (error,stdout,stderr) => {
+    exec(command, (error, stdout, stderr) => {
       if (error) console.log(error)
       if (stderr) console.log(stderr)
       console.log(stdout)
@@ -46,7 +52,7 @@ app.post('/r', CreateUser, (req, res) => {
     })
   }
   else
-    res.json({status: "Erro create User"})
+    res.json({ status: "Erro create User" })
 })
 
 app.post('/login', function (req, res) {
