@@ -1,4 +1,4 @@
-const User = require('./user')
+const {User} = require('./user')
 
 async function CreateUser(req, res, next) {
     const lastindex = await User.count()

@@ -30,5 +30,23 @@ const User = sequelize.define('User', {
     }
 });
 
+async function CheckUser(email, password) {
+    return await User.findAll({
+        where: {
+            email: email,
+            password: password
+        }
+    }).then((user) => {
+        if (user.length == 1) {
+            return {
+                id: user[0].dataValues.id,
+                email: user[0].dataValues.email,
+                name: user[0].dataValues.name
+            }
+        }
+        else return false
+    })
+}
+
 //User.sync({force: true})
-module.exports = User
+module.exports = { User, CheckUser }

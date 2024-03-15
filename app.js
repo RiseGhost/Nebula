@@ -9,6 +9,7 @@ const getPort = require('./services/random_port')
 const multer = require('multer');
 const upload = multer();
 const CreateUser = require('./models/create')
+const { CheckUser } = require('./models/user')
 
 app.use(seccions({
   secret: 'keyboard cat',
@@ -22,13 +23,7 @@ app.use(BodyParse.json())
 
 app.get('/', function (req, res) {
   console.log(req.session)
-  res.sendFile('./views/index.html', { root: __dirname })
-})
-
-app.get('/s', (req,res) => {
-  req.session.user = true
-  console.log(req.session)
-  res.send("Cona")
+  res.sendFile('./views/login.html', { root: __dirname })
 })
 
 app.get('/resgister', (req, res) => {
@@ -56,10 +51,17 @@ app.post('/r', CreateUser, (req, res) => {
 })
 
 app.post('/login', function (req, res) {
-  const { username, password } = req.body
-  req.session.user = username
-  console.log(username, password)
-  res.send("Sucesso")
+  const { email, password } = req.body
+  CheckUser(email,password).then((u) => {
+    if (u == false) res.json({status: "User not found"})
+    else{
+      req.session.user_id = u.id
+      req.session.name = u.name
+      req.session.email = u.email
+      req.session.auth = true
+      res.json({status: "Sucess"})
+    }
+  })
 })
 
 app.listen(port, () => { console.log('Server ON on port ' + port) })
