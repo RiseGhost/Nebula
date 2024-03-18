@@ -1,0 +1,1 @@
+cmd_Release/obj.target/storagem.node := g++ -o Release/obj.target/storagem.node -shared -pthread -rdynamic  -Wl,-soname=storagem.node -Wl,--start-group Release/obj.target/storagem/storagem/index.o -Wl,--end-group 
