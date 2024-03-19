@@ -34,6 +34,7 @@ app.get('/resgister', (req, res) => {
 app.post('/r', CreateUser, (req, res) => {
   if (req.validat) {
     const port_user = getPort()
+    const key_port = getPort()
     const command = "node ./services/InitUserEnv.js " + port_user + " " + req.id
 
     exec(command, (error, stdout, stderr) => {
@@ -44,6 +45,7 @@ app.post('/r', CreateUser, (req, res) => {
 
     res.json({
       port_user: port_user,
+      key_port: key_port,
       status: "Create Sucess"
     })
   }
