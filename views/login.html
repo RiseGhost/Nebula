@@ -32,4 +32,9 @@
     </div>
 </body>
 <script src="./script/login.js"></script>
+<script>
+    fetch('/dir', {
+        method: 'POST',
+    }).then(response => response.json()).then(data => {console.log(data)})
+</script>
 </html>

@@ -409,6 +409,16 @@
     "want_separate_host_toolset": 0,
     "nodedir": "/home/theo-pi/.cache/node-gyp/18.19.1",
     "python": "/usr/bin/python3",
-    "standalone_static_library": 1
+    "standalone_static_library": 1,
+    "user_agent": "npm/10.2.4 node/v18.19.1 linux arm64 workspaces/false",
+    "userconfig": "/home/theo-pi/.npmrc",
+    "local_prefix": "/home/theo-pi/Desktop/Nebula/lib",
+    "prefix": "/home/theo-pi/.nvm/versions/node/v18.19.1",
+    "npm_version": "10.2.4",
+    "cache": "/home/theo-pi/.npm",
+    "node_gyp": "/home/theo-pi/.nvm/versions/node/v18.19.1/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js",
+    "globalconfig": "/home/theo-pi/.nvm/versions/node/v18.19.1/etc/npmrc",
+    "init_module": "/home/theo-pi/.npm-init.js",
+    "global_prefix": "/home/theo-pi/.nvm/versions/node/v18.19.1"
   }
 }

@@ -4,6 +4,15 @@
 #include <stdlib.h>
 #include "Storage.h"
 
+short digits(int number){
+	short count = 0;
+	while (number >= 1){
+		number /= 10;
+		count++;
+	}
+	return count;
+}
+
 napi_value CreateNapiString(napi_env env, const char *string)
 {
 	napi_value str;
@@ -41,9 +50,14 @@ napi_value ObjectStorageInfo(napi_env env, napi_value dir_path)
 	const char *path = NapiValue_To_String(dir_path, env);
 	StorageData data = info(path);
 	napi_create_array_with_length(env, data.size, &Storage);
+	napi_create_object(env, &Storage);
 	for (int index = 0; index < data.size; index++){
 		napi_value element = ObjectStorageType(env, data.elements[index]);
+		char *index_number = (char *)malloc(sizeof(char) * digits(index+1));
+		sprintf(index_number,"%i",index);
+		napi_set_named_property(env,Storage,index_number,element);
 		napi_set_element(env, Storage, index, element);
+		free(index_number);
 	}
 	StorageData_FreeMemory(&data);
 	return Storage;
