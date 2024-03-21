@@ -4,5 +4,8 @@ document.getElementById("res_form").addEventListener('submit', (e) => {
     fetch('/login', {
         method: 'POST',
         body: formData
-    }).then(response => response.json()).then(data => {console.log(data.status)})
+    }).then(response => response.json()).then(data => {
+        if (data.status == "Sucess") window.location.href = "/desktop"
+        else console.log(data.status)
+    })
 })

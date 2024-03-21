@@ -67,6 +67,10 @@ app.post('/login', (req, res) => {
   })
 })
 
+app.get('/desktop', (req,res) => {
+  res.sendFile("./views/desktop.html", { root: __dirname})
+})
+
 app.post('/dir', (req, res) => {
   const s = req.session
   if (s.auth) {
