@@ -5,7 +5,8 @@
 #define FILE_ 0b0000
 #define DIROTORY 0b0001
 
-struct StorageI{
+struct StorageI
+{
   char *name;
   char type;
 };
@@ -35,10 +36,11 @@ void StorageData_AllocMemory(StorageData *data)
     data->elements = (StorageI *)realloc(data->elements, sizeof(StorageI) * data->size);
 }
 
-void StorageData_FreeMemory(StorageData *data){
+void StorageData_FreeMemory(StorageData *data)
+{
   for (int index = 0; index < data->size; index++)
     free(data->elements[index].name);
-  
+
   free(data->elements);
 }
 
@@ -55,7 +57,7 @@ StorageData info(string dir_)
       StorageData_AllocMemory(&ar);
       int index = ar.size - 1;
       ar.elements[index].name = strdup(dir->d_name);
-      if (dir->d_type == DT_DIR)
+      if (dir->d_type == DT_DIR || dir->d_type == DT_LNK)
         ar.elements[index].type = DIROTORY;
       else
         ar.elements[index].type = FILE_;

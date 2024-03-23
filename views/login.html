@@ -33,8 +33,16 @@
 </body>
 <script src="./script/login.js"></script>
 <script>
+    const path = {
+        path: "bin"
+    }
+    const json_path = JSON.stringify(path)
     fetch('/dir', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: undefined
     }).then(response => response.json()).then(data => {console.log(data)})
 </script>
 </html>

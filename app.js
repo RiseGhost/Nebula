@@ -73,9 +73,11 @@ app.get('/desktop', (req,res) => {
 })
 
 app.post('/dir', (req, res) => {
+  const { path } = req.body
   const s = req.session
   if (s.auth) {
-    const user_dir = __dirname + "/users_dir/" + s.user_id
+    var user_dir
+    (path) ? user_dir = __dirname + "/users_dir/" + s.user_id + path : user_dir = __dirname + "/users_dir/" + s.user_id
     res.json(DirInfo(user_dir))
   }
   else
