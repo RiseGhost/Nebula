@@ -16,12 +16,21 @@ function rgb_add_opacity(rgb, opacity) {
   return color + "," + opacity + ")"
 }
 
+function create_body(height){
+  const body = document.createElement("div")
+  body.id = "window_body"
+  body.style.width = "100%"
+  body.style.height = (height - parseInt(tittle_bar_height)) + "px"
+  return body
+}
+
 class GUI_Window {
   constructor(width, height, z_index, name) {
     (!name) ? this.name = "Window" : this.name = name
     this.width = width
     this.height = height
     this.z_index = z_index
+    this.body = create_body(height)
     this.window = this.create()
   }
   create_tittle_bar() {
@@ -45,31 +54,42 @@ class GUI_Window {
     tittle.id = "tittle_bar"
     return tittle
   }
-  create(div) {
+  create() {
     const gui_window = document.createElement("div")
     gui_window.style.width = this.width + "px"
     gui_window.style.height = this.height + "px"
     gui_window.style.backgroundColor = "rgba" + rgb_add_opacity(UserTheme.primary_color, opacity)
     gui_window.appendChild(this.create_tittle_bar())
     gui_window.id = "gui_window"
-    if (div) gui_window.appendChild(div)
+    gui_window.appendChild(this.body)
     dragElement(gui_window)
     return gui_window
+  }
+  addBody(div){
+    this.body.appendChild(div)
   }
   show() {
     desktop.appendChild(this.window)
   }
-  update_window(new_window) {
+  reload_window(new_window) {
     desktop.replaceChild(new_window,this.window)
     this.window = new_window
+  }
+  update_window(body){
+    this.window.replaceChild(body,this.body)
+    this.body = body
   }
 }
 
 class Explorer extends GUI_Window {
   constructor(width, height, z_index, name) {
     super(width, height, z_index, name)
-    this.update_path("/")
     this.path_bar_heigth = 20
+    this.path_bar = this.create_path_bar()
+    this.files_body = this.create_files_body()
+    this.explorer_body = this.create_explorer_body()
+    this.update_window(this.explorer_body)
+    this.update_path("/")
     this.show()
   }
 
@@ -77,14 +97,36 @@ class Explorer extends GUI_Window {
     const path_bar = document.createElement("div")
     const btn_back = document.createElement("button")
     const label = document.createElement("label")
+    label.id = "path_label"
     label.innerHTML = this.path
     label.style.color = UserTheme.text_color
     label.style.backgroundColor = "rgb" + UserTheme.second_color
+    this.label_path = label
     path_bar.appendChild(btn_back)
     path_bar.appendChild(label)
     path_bar.style.height = this.path_bar_heigth + "px"
     path_bar.id = "path_bar"
     return path_bar
+  }
+
+  update_path_bar(){
+    this.label_path.innerHTML = this.path
+  }
+
+  create_explorer_body(){
+    const explorer_body = document.createElement("div")
+    explorer_body.id = "explorer_body"
+    explorer_body.style.height = (parseInt(this.height) - parseInt(tittle_bar_height)) + "px"
+    explorer_body.appendChild(this.path_bar)
+    explorer_body.appendChild(this.files_body)
+    return explorer_body
+  }
+
+  create_files_body(){
+    const files = document.createElement("div")
+    files.id = "explorer_files"
+    files.style.height = (this.height - (parseInt(tittle_bar_height) + this.path_bar_heigth) - 10) + "px"
+    return files
   }
 
   update_path(path) {
@@ -97,13 +139,7 @@ class Explorer extends GUI_Window {
       },
       body: json_path
     }).then(response => response.json()).then(Storage => {
-      const body = document.createElement("div")
-      body.id = "explorer_body"
-      body.style.height = (parseInt(this.height) - parseInt(tittle_bar_height)) + "px"
-      body.appendChild(this.create_path_bar())
-      const files = document.createElement("div")
-      files.id = "explorer_files"
-      files.style.height = (this.height - (parseInt(tittle_bar_height) + this.path_bar_heigth) - 10) + "px"
+      this.files_body.innerHTML = ""
       Object.entries(Storage).forEach(element => {
         const storage_element = document.createElement("div")
         storage_element.id = "storage_element"
@@ -125,11 +161,15 @@ class Explorer extends GUI_Window {
         storage_element.name = element[1].name
         storage_element.appendChild(icons)
         storage_element.appendChild(Label_name)
-        files.appendChild(storage_element)
+        this.files_body.appendChild(storage_element)
       })
-      body.appendChild(files)
-      this.update_window(this.create(body))
+      this.update_path_bar()
     })
+  }
+
+  update_explorer_body(body){
+    this.explorer_body.replaceChild(body,this.files_body)
+    this.files_body = body
   }
 }
 
