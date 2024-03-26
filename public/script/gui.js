@@ -7,6 +7,12 @@ function addHoverEffect(Node,HoverColor,DefaultColor){
   Node.addEventListener('mouseout', (e) => Node.style.backgroundColor = DefaultColor)
 }
 
+function createNode(NodeType,id){
+  const node = document.createElement(NodeType)
+  node.id = id
+  return node
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const menu = document.getElementById("contex-menu-file")
   document.addEventListener('click', (e) => {
@@ -83,7 +89,7 @@ class Explorer extends GUI_Window {
   }
 
   create_path_bar() {
-    const path_bar = document.createElement("div")
+    const path_bar = createNode("div","path_bar")
     const btn_back = document.createElement("button")
     const label = document.createElement("label")
     btn_back.innerHTML = "←"
@@ -104,7 +110,6 @@ class Explorer extends GUI_Window {
     path_bar.appendChild(btn_back)
     path_bar.appendChild(label)
     path_bar.style.height = this.path_bar_heigth + "px"
-    path_bar.id = "path_bar"
     return path_bar
   }
 
@@ -113,8 +118,7 @@ class Explorer extends GUI_Window {
   }
 
   create_explorer_body() {
-    const explorer_body = document.createElement("div")
-    explorer_body.id = "explorer_body"
+    const explorer_body = createNode("div","explorer_body")
     explorer_body.style.height = (parseInt(this.height) - parseInt(tittle_bar_height)) + "px"
     explorer_body.appendChild(this.path_bar)
     explorer_body.appendChild(this.files_body)
@@ -122,8 +126,7 @@ class Explorer extends GUI_Window {
   }
 
   create_files_body() {
-    const files = document.createElement("div")
-    files.id = "explorer_files"
+    const files = createNode("div","explorer_files")
     files.style.height = (this.height - (parseInt(tittle_bar_height) + this.path_bar_heigth) - 10) + "px"
     return files
   }
@@ -140,8 +143,7 @@ class Explorer extends GUI_Window {
     }).then(response => response.json()).then(Storage => {
       this.files_body.innerHTML = ""
       Object.entries(Storage).forEach(element => {
-        const storage_element = document.createElement("div")
-        storage_element.id = "storage_element"
+        const storage_element = createNode("div","storage_element")
         const Label_name = document.createElement("label")
         Label_name.value = this.path
         Label_name.className = "Label_name_explorer"
@@ -154,12 +156,10 @@ class Explorer extends GUI_Window {
         const icons = document.createElement("img")
         if (element[1].type == "dir") {
           icons.src = "./imgs/dir.png"
-          icons.id = "dir"
           storage_element.addEventListener('click', (e) => { this.update_path(this.path + storage_element.name + "/") })
         }
         else {
           icons.src = "./imgs/file.png"
-          icons.id = "file"
         }
         addHoverEffect(storage_element,"rgb" + UserTheme.second_color, "rgba(0,0,0,0)")
         storage_element.name = element[1].name
@@ -186,9 +186,7 @@ function update_gui() {
 }
 
 function addColumns(width, per) {
-  console.log("entrou")
   const column_number = Columns(width, per)
-  console.log("column number", column_number)
   for (var index = 0; index < column_number; index++) {
     var column = document.createElement("div")
     column.style.width = width + "px"

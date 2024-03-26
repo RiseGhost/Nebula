@@ -31,16 +31,13 @@ class GUI_Window {
     this.window = this.create()
   }
   create_tittle_bar() {
-    const tittle = document.createElement("div")
+    const tittle = createNode("div","tittle_bar")
     const label_name = document.createElement("label")
     label_name.innerHTML = this.name
-    const trafic_ligth = document.createElement("div")
-    trafic_ligth.id = "trafic_ligth"
-    const btn_close = document.createElement("div")
-    btn_close.id = "btn_close"
+    const trafic_ligth = createNode("div","trafic_ligth")
+    const btn_close = createNode("div","btn_close")
     btn_close.addEventListener('click', (e) => desktop.removeChild(this.window))
-    const btn_minimize = document.createElement("div")
-    btn_minimize.id = "btn_minimize"
+    const btn_minimize = createNode("div","btn_minimize")
     trafic_ligth.appendChild(btn_close)
     trafic_ligth.appendChild(btn_minimize)
     tittle.appendChild(trafic_ligth)
@@ -48,7 +45,6 @@ class GUI_Window {
     tittle.style.width = this.width + "px"
     tittle.style.height = tittle_bar_height
     tittle.style.backgroundColor = "rgb" + UserTheme.primary_color
-    tittle.id = "tittle_bar"
     return tittle
   }
   create() {
