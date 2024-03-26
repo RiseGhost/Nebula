@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "Storage.h"
 
+using namespace std;
+
 short digits(int number){
 	short count = 0;
 	while (number >= 1){
@@ -71,11 +73,22 @@ napi_value StorageInfo(napi_env env, napi_callback_info info)
 	return ObjectStorageInfo(env, argv[0]);
 }
 
+napi_value RenameFile(napi_env env, napi_callback_info info){
+	size_t argc = 2;
+	napi_value argv[2];
+	napi_get_cb_info(env,info,&argc,argv,NULL,NULL);
+	int Rename = rename(NapiValue_To_String(argv[0],env),NapiValue_To_String(argv[1],env));
+	if (Rename == 0) 	return CreateNapiString(env,"Sucess");
+	else				return CreateNapiString(env,"Error");
+}
+
 napi_value init(napi_env env, napi_value exports)
 {
-	napi_value func_StorageInfo;
+	napi_value func_StorageInfo, func_Rename;
 	napi_create_function(env, nullptr, 0, StorageInfo, nullptr, &func_StorageInfo);
+	napi_create_function(env, nullptr, 0, RenameFile, nullptr, &func_Rename);
 	napi_set_named_property(env, exports, "StorageInfo", func_StorageInfo);
+	napi_set_named_property(env, exports, "RenameFile", func_Rename);
 	return exports;
 }
 

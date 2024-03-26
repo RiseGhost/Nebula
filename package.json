@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "run": "npm-run-all --parallel server sockets",
-    "server": "node app.js",
+    "server": "sudo node app.js",
     "sockets": "node ./services/socket.js"
   },
   "keywords": [],

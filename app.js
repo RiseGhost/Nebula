@@ -10,7 +10,7 @@ const multer = require('multer');
 const upload = multer();
 const CreateUser = require('./models/create')
 const { CheckUser } = require('./models/user')
-const { DirInfo } = require('./lib/index')
+const { DirInfo, RenameFile } = require('./lib/index')
 
 app.use(seccions({
   secret: 'keyboard cat',
@@ -67,9 +67,9 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.get('/desktop', (req,res) => {
+app.get('/desktop', (req, res) => {
   if (!req.session.auth) res.sendStatus(401)
-  res.sendFile("./views/desktop.html", { root: __dirname})
+  res.sendFile("./views/desktop.html", { root: __dirname })
 })
 
 app.post('/dir', (req, res) => {
@@ -81,7 +81,19 @@ app.post('/dir', (req, res) => {
     res.json(DirInfo(user_dir))
   }
   else
-    res.json({status: 401,msg: "This user not have Permissons"})
+    res.json({ status: 401, msg: "This user not have Permissons" })
+})
+
+app.post('/renamefile', (req,res) => {
+  const { path, name } = req.body
+  const s = req.session
+  if (s.auth){
+    const user_dir_oldname = __dirname + "/users_dir/" + s.user_id + path
+    const user_dir_newname = __dirname + "/users_dir/" + s.user_id + name
+    res.json({msg: RenameFile(user_dir_oldname,user_dir_newname)})
+  }
+  else
+    res.json({ status: 401, msg: "This user not have Permissons" })
 })
 
 app.listen(port, () => { console.log('Server ON on port ' + port) })

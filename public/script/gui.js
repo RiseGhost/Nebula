@@ -1,84 +1,69 @@
 const desktop = document.getElementById("desktop")
 var desktop_width = desktop.offsetWidth
 var desktop_column = []
-const tittle_bar_height = "20px"
-const opacity = 0.6
 
-const UserTheme = {
-  primary_color: "(255,255,255)",
-  second_color: "(125,190,150)",
-  env_color: "",
-  text_color: "000000",
+document.addEventListener('DOMContentLoaded', () => {
+  const menu = document.getElementById("contex-menu-file")
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target)) menu.style.display = "none"
+  })
+  document.addEventListener('keydown', (e) => {
+    if (!menu.contains(e.target)) menu.style.display = "none"
+  })
+})
+
+
+function ShowContextMenuFile(e, node) {
+  const menu = document.getElementById("contex-menu-file")
+  menu.style.color = "#" + UserTheme.text_color
+  menu.style.backgroundColor = "rgb" + UserTheme.primary_color
+  menu.childNodes.forEach(child => {
+    child.addEventListener('mouseover', (e) => child.style.backgroundColor = "rgb" + UserTheme.second_color)
+    child.addEventListener('mouseout', (e) => child.style.backgroundColor = "rgb" + UserTheme.primary_color)
+  })
+  const opc_rename = document.getElementById("OPC_Rename")
+  menu.style.display = "block"
+  menu.style.left = e.pageX + "px"
+  menu.style.top = e.pageY + "px"
+  menu.style.zIndex = "400"
+  opc_rename.addEventListener('click', (event_rename) => {
+    enableEdit(node)
+  })
 }
 
-function rgb_add_opacity(rgb, opacity) {
-  const color = rgb.replace(')', '')
-  return color + "," + opacity + ")"
-}
-
-function create_body(height){
-  const body = document.createElement("div")
-  body.id = "window_body"
-  body.style.width = "100%"
-  body.style.height = (height - parseInt(tittle_bar_height)) + "px"
-  return body
-}
-
-class GUI_Window {
-  constructor(width, height, z_index, name) {
-    (!name) ? this.name = "Window" : this.name = name
-    this.width = width
-    this.height = height
-    this.z_index = z_index
-    this.body = create_body(height)
-    this.window = this.create()
-  }
-  create_tittle_bar() {
-    const tittle = document.createElement("div")
-    const label_name = document.createElement("label")
-    label_name.innerHTML = this.name
-    const trafic_ligth = document.createElement("div")
-    trafic_ligth.id = "trafic_ligth"
-    const btn_close = document.createElement("div")
-    btn_close.id = "btn_close"
-    btn_close.addEventListener('click', (e) => desktop.removeChild(this.window))
-    const btn_minimize = document.createElement("div")
-    btn_minimize.id = "btn_minimize"
-    trafic_ligth.appendChild(btn_close)
-    trafic_ligth.appendChild(btn_minimize)
-    tittle.appendChild(trafic_ligth)
-    tittle.appendChild(label_name)
-    tittle.style.width = this.width + "px"
-    tittle.style.height = tittle_bar_height
-    tittle.style.backgroundColor = "rgb" + UserTheme.primary_color
-    tittle.id = "tittle_bar"
-    return tittle
-  }
-  create() {
-    const gui_window = document.createElement("div")
-    gui_window.style.width = this.width + "px"
-    gui_window.style.height = this.height + "px"
-    gui_window.style.backgroundColor = "rgba" + rgb_add_opacity(UserTheme.primary_color, opacity)
-    gui_window.appendChild(this.create_tittle_bar())
-    gui_window.id = "gui_window"
-    gui_window.appendChild(this.body)
-    dragElement(gui_window)
-    return gui_window
-  }
-  addBody(div){
-    this.body.appendChild(div)
-  }
-  show() {
-    desktop.appendChild(this.window)
-  }
-  reload_window(new_window) {
-    desktop.replaceChild(new_window,this.window)
-    this.window = new_window
-  }
-  update_window(body){
-    this.window.replaceChild(body,this.body)
-    this.body = body
-  }
+function enableEdit(label) {
+  const FileName = label.innerHTML
+  const father = label.parentNode
+  const path = label.value + label.innerHTML
+  const input = document.createElement("input")
+  input.type = "text"
+  input.value = FileName
+  input.style.width = label.offsetWidth + "px"
+  father.replaceChild(input, label)
+  input.focus()
+  console.log(path)
+  input.addEventListener('keydown', (e) => {
+    const new_name = input.value
+    if (e.key == "Enter") {
+      label.innerHTML = input.value
+      father.replaceChild(label, input)
+      father.name = new_name
+      if (FileName != new_name) {
+        const json_path = JSON.stringify({ path: path, name: path.replace(FileName, new_name) })
+        fetch('/renamefile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: json_path
+        }).then(response => response.json()).then(res => {
+          const nofity = new Notify(180, 55, undefined, 10, "#50ba5d","./imgs/check.png", res.msg)
+          setTimeout(() => nofity.close(), 3000)
+        })
+      }
+    }
+  })
+  input.addEventListener('focusout', (e) => { father.replaceChild(label, input) })
 }
 
 class Explorer extends GUI_Window {
@@ -93,15 +78,25 @@ class Explorer extends GUI_Window {
     this.show()
   }
 
-  create_path_bar(){
+  create_path_bar() {
     const path_bar = document.createElement("div")
     const btn_back = document.createElement("button")
     const label = document.createElement("label")
+    btn_back.innerHTML = "←"
+    btn_back.style.backgroundColor = "rgb" + UserTheme.second_color
     label.id = "path_label"
     label.innerHTML = this.path
     label.style.color = UserTheme.text_color
     label.style.backgroundColor = "rgb" + UserTheme.second_color
     this.label_path = label
+    btn_back.addEventListener('click', (e) => {
+      const current_path = this.path.split('/')
+      var new_path = ""
+      for (var index = 0; index < current_path.length - 2; index++) {
+        new_path += current_path[index] + "/"
+      }
+      (new_path == "") ? this.update_path("/") : this.update_path(new_path)
+    })
     path_bar.appendChild(btn_back)
     path_bar.appendChild(label)
     path_bar.style.height = this.path_bar_heigth + "px"
@@ -109,11 +104,11 @@ class Explorer extends GUI_Window {
     return path_bar
   }
 
-  update_path_bar(){
+  update_path_bar() {
     this.label_path.innerHTML = this.path
   }
 
-  create_explorer_body(){
+  create_explorer_body() {
     const explorer_body = document.createElement("div")
     explorer_body.id = "explorer_body"
     explorer_body.style.height = (parseInt(this.height) - parseInt(tittle_bar_height)) + "px"
@@ -122,7 +117,7 @@ class Explorer extends GUI_Window {
     return explorer_body
   }
 
-  create_files_body(){
+  create_files_body() {
     const files = document.createElement("div")
     files.id = "explorer_files"
     files.style.height = (this.height - (parseInt(tittle_bar_height) + this.path_bar_heigth) - 10) + "px"
@@ -131,7 +126,7 @@ class Explorer extends GUI_Window {
 
   update_path(path) {
     this.path = path
-    const json_path = JSON.stringify({path: this.path})
+    const json_path = JSON.stringify({ path: this.path })
     fetch('/dir', {
       method: 'POST',
       headers: {
@@ -144,8 +139,14 @@ class Explorer extends GUI_Window {
         const storage_element = document.createElement("div")
         storage_element.id = "storage_element"
         const Label_name = document.createElement("label")
+        Label_name.value = this.path
+        Label_name.className = "Label_name_explorer"
         Label_name.innerHTML = element[1].name
         Label_name.style.text_color = UserTheme.text_color
+        Label_name.addEventListener('contextmenu', (e) => {
+          e.preventDefault()
+          ShowContextMenuFile(e, e.target)
+        })
         const icons = document.createElement("img")
         if (element[1].type == "dir") {
           icons.src = "./imgs/dir.png"
@@ -167,8 +168,8 @@ class Explorer extends GUI_Window {
     })
   }
 
-  update_explorer_body(body){
-    this.explorer_body.replaceChild(body,this.files_body)
+  update_explorer_body(body) {
+    this.explorer_body.replaceChild(body, this.files_body)
     this.files_body = body
   }
 }
