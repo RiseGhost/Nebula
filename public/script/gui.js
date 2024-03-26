@@ -2,6 +2,11 @@ const desktop = document.getElementById("desktop")
 var desktop_width = desktop.offsetWidth
 var desktop_column = []
 
+function addHoverEffect(Node,HoverColor,DefaultColor){
+  Node.addEventListener('mouseover', (e) => Node.style.backgroundColor = HoverColor)
+  Node.addEventListener('mouseout', (e) => Node.style.backgroundColor = DefaultColor)
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const menu = document.getElementById("contex-menu-file")
   document.addEventListener('click', (e) => {
@@ -18,8 +23,7 @@ function ShowContextMenuFile(e, node) {
   menu.style.color = "#" + UserTheme.text_color
   menu.style.backgroundColor = "rgb" + UserTheme.primary_color
   menu.childNodes.forEach(child => {
-    child.addEventListener('mouseover', (e) => child.style.backgroundColor = "rgb" + UserTheme.second_color)
-    child.addEventListener('mouseout', (e) => child.style.backgroundColor = "rgb" + UserTheme.primary_color)
+    addHoverEffect(child,"rgb" + UserTheme.second_color, "rgb" + UserTheme.primary_color)
   })
   const opc_rename = document.getElementById("OPC_Rename")
   menu.style.display = "block"
@@ -157,8 +161,7 @@ class Explorer extends GUI_Window {
           icons.src = "./imgs/file.png"
           icons.id = "file"
         }
-        storage_element.addEventListener('mouseover', (e) => storage_element.style.backgroundColor = "rgb" + UserTheme.second_color)
-        storage_element.addEventListener('mouseout', (e) => storage_element.style.backgroundColor = "rgba(0,0,0,0)")
+        addHoverEffect(storage_element,"rgb" + UserTheme.second_color, "rgba(0,0,0,0)")
         storage_element.name = element[1].name
         storage_element.appendChild(icons)
         storage_element.appendChild(Label_name)
