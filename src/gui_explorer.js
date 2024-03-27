@@ -76,7 +76,7 @@ function enableEdit(label) {
 
 class Explorer extends GUI_Window {
     constructor(width, height, z_index, name) {
-        super(width, height, z_index, name)
+        super(width, height, z_index, name,"./imgs/explorer.png")
         this.path_bar_heigth = 20
         this.path_bar = this.create_path_bar()
         this.files_body = this.create_files_body()

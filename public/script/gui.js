@@ -7255,7 +7255,20 @@ module.exports = {aes_cipher, aes_decipher}
 /***/ }),
 /* 39 */,
 /* 40 */
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   GUI_Window: () => (/* binding */ GUI_Window),
+/* harmony export */   UserTheme: () => (/* binding */ UserTheme),
+/* harmony export */   createNode: () => (/* binding */ createNode),
+/* harmony export */   create_body: () => (/* binding */ create_body),
+/* harmony export */   desktop: () => (/* binding */ desktop),
+/* harmony export */   rgb_add_opacity: () => (/* binding */ rgb_add_opacity),
+/* harmony export */   tittle_bar_height: () => (/* binding */ tittle_bar_height)
+/* harmony export */ });
+/* harmony import */ var _task_icon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(41);
 
 const tittle_bar_height = "20px"
 const opacity = 0.6
@@ -7266,6 +7279,7 @@ const UserTheme = {
   second_color: "(125,190,150)",
   env_color: "",
   text_color: "000000",
+  task_btn_size: 50,
 }
 
 function createNode(NodeType,id){
@@ -7288,12 +7302,15 @@ function create_body(height) {
 }
 
 class GUI_Window {
-  constructor(width, height, z_index, name) {
+  constructor(width, height, z_index, name,IconURL) {
     (!name) ? this.name = "Window" : this.name = name
     this.width = width
     this.height = height
     this.z_index = z_index
+    this.visible = false
     this.body = create_body(height)
+    const task_bar_html_node = document.getElementById("task_bar")
+    this.task_btn = new _task_icon__WEBPACK_IMPORTED_MODULE_0__["default"](UserTheme.task_btn_size,this.name,IconURL,task_bar_html_node,this)
     this.window = this.create()
   }
   create_tittle_bar() {
@@ -7302,7 +7319,7 @@ class GUI_Window {
     label_name.innerHTML = this.name
     const trafic_ligth = createNode("div","trafic_ligth")
     const btn_close = createNode("div","btn_close")
-    btn_close.addEventListener('click', (e) => desktop.removeChild(this.window))
+    btn_close.addEventListener('click', (e) => this.close())
     const btn_minimize = createNode("div","btn_minimize")
     trafic_ligth.appendChild(btn_close)
     trafic_ligth.appendChild(btn_minimize)
@@ -7328,7 +7345,12 @@ class GUI_Window {
     this.body.appendChild(div)
   }
   show() {
+    this.visible = true
     desktop.appendChild(this.window)
+  }
+  close(){   
+    desktop.removeChild(this.window)
+    this.task_btn.remove_task_bar()
   }
   reload_window(new_window) {
     desktop.replaceChild(new_window, this.window)
@@ -7337,6 +7359,14 @@ class GUI_Window {
   update_window(body) {
     this.window.replaceChild(body, this.body)
     this.body = body
+  }
+  hidden(){
+    this.visible = false
+    this.window.style.display = "none" 
+  }
+  unhidden(){
+    this.visible = true
+    this.window.style.display = "block"
   }
 }
 
@@ -7381,7 +7411,7 @@ function dragElement(elmnt) {
   }
 }
 
-module.exports = {UserTheme,rgb_add_opacity,create_body,desktop,GUI_Window,createNode,tittle_bar_height}
+
 
 /***/ }),
 /* 41 */
@@ -7392,9 +7422,58 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+class Task_icon{
+    constructor(width,name,IconURL,HTMLNode,window){
+        this.width = width
+        this.height = width
+        this.name = name
+        this.IconURL = IconURL
+        this.HTMLNode = HTMLNode
+        this.window = window
+        this.btn = this.create_task_button()
+        this.add_task_bar()
+    }
+    create_task_button(){
+        const btn_container = document.createElement("div")
+        btn_container.id = "btn_container"
+        btn_container.style.width = this.width + "px"
+        btn_container.style.height = this.height + "px"
+        const btn_img = document.createElement("img")
+        if (this.IconURL) btn_img.src = this.IconURL
+        btn_img.style.width = (this.width * 0.9) + "px"
+        btn_img.style.height = (this.height * 0.9) + "px"
+        const label_name = document.createElement("label")
+        label_name.innerHTML = this.name
+        label_name.style.fontSize = "10px"
+        btn_container.appendChild(btn_img)
+        btn_container.appendChild(label_name)
+        btn_container.addEventListener('click',(e) => {
+            if(this.window.visible) this.window.hidden()
+            else                    this.window.unhidden()
+        })
+        return btn_container
+    }
+    add_task_bar(){
+        this.HTMLNode.appendChild(this.btn)
+    }
+    remove_task_bar(){
+        this.HTMLNode.removeChild(this.btn)
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Task_icon);
+
+/***/ }),
+/* 42 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
-/* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_gui_window__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _gui_notify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(42);
+/* harmony import */ var _gui_notify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(43);
 /* harmony import */ var _aes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1);
 /* harmony import */ var _aes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_aes__WEBPACK_IMPORTED_MODULE_2__);
 
@@ -7475,7 +7554,7 @@ function enableEdit(label) {
 
 class Explorer extends _gui_window__WEBPACK_IMPORTED_MODULE_0__.GUI_Window {
     constructor(width, height, z_index, name) {
-        super(width, height, z_index, name)
+        super(width, height, z_index, name,"./imgs/explorer.png")
         this.path_bar_heigth = 20
         this.path_bar = this.create_path_bar()
         this.files_body = this.create_files_body()
@@ -7577,7 +7656,7 @@ class Explorer extends _gui_window__WEBPACK_IMPORTED_MODULE_0__.GUI_Window {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Explorer);
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7586,7 +7665,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
-/* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_gui_window__WEBPACK_IMPORTED_MODULE_0__);
 
 const desktop = document.getElementById("desktop")
 
@@ -7726,8 +7804,7 @@ var __webpack_exports__ = {};
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
-/* harmony import */ var _gui_window__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_gui_window__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _gui_explorer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(41);
+/* harmony import */ var _gui_explorer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(42);
 
 
 

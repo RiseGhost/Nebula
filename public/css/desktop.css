@@ -13,9 +13,11 @@ body {
     width: 98%;
     height: 95%;
     background-color: rebeccapurple;
+    border: 0px;
+    border-radius: 20px;
 }
 
-#contex-menu-file{
+#contex-menu-file {
     position: absolute;
     list-style: none;
     display: none;
@@ -24,7 +26,7 @@ body {
     border-radius: 10px;
 }
 
-#contex-menu-file li{
+#contex-menu-file li {
     cursor: pointer;
     padding: 5px;
     border: none;
@@ -32,13 +34,13 @@ body {
     margin: 3px;
 }
 
-#contex-menu-file li{
+#contex-menu-file li {
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-#contex-menu-file li div img{
+#contex-menu-file li div img {
     width: 15px;
     height: 15px;
 }
@@ -105,14 +107,14 @@ body {
     margin: 5px;
 }
 
-#explorer_body #path_bar label{
+#explorer_body #path_bar label {
     width: 70%;
     border: none;
     border-radius: 5px;
     padding: 3px;
 }
 
-#explorer_body #path_bar button{
+#explorer_body #path_bar button {
     border: none;
     border-radius: 100%;
     padding: 5px;
@@ -146,7 +148,7 @@ body {
     width: 100%;
 }
 
-#notify_window{
+#notify_window {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -157,19 +159,19 @@ body {
     border-radius: 16px;
 }
 
-#notify_window #close_bar{
+#notify_window #close_bar {
     height: 15px;
     display: flex;
     justify-content: right;
     width: 100%;
 }
 
-#notify_window #close_bar img{
+#notify_window #close_bar img {
     width: 10px;
     height: 10px;
 }
 
-#notify_window #notify_body{
+#notify_window #notify_body {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -177,12 +179,49 @@ body {
     width: 100%;
 }
 
-#notify_window #notify_body img{
+#notify_window #notify_body img {
     width: 30px;
     height: 30px;
 }
 
-#notify_window #notify_body label{
+#notify_window #notify_body label {
     font-weight: bold;
     font-size: 18px;
+}
+
+#container_task_bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    height: 80px;
+    width: 100%;
+    bottom: 25px;
+}
+
+#container_task_bar #task_bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    width: 75%;
+    background-color: aquamarine;
+    border: none;
+    border-radius: 18px;
+    caret-color: transparent; /*Coloca a cor do cursos de texto (aquele cursos que fica a piscas quando estamos a editar um campo de texto) em transparente.*/
+}
+
+#container_task_bar #task_bar #btn_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    border-radius: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#container_task_bar #task_bar #btn_container:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }

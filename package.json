@@ -6,7 +6,8 @@
   "scripts": {
     "run": "npm-run-all --parallel server sockets",
     "server": "sudo node app.js",
-    "sockets": "node ./services/socket.js"
+    "sockets": "node ./services/socket.js",
+    "build-webpack": "npx webpack"
   },
   "keywords": [],
   "author": "",

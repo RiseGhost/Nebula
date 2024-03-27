@@ -1,3 +1,4 @@
+import Task_icon from './task_icon'
 const tittle_bar_height = "20px"
 const opacity = 0.6
 const desktop = document.getElementById("desktop")
@@ -7,6 +8,7 @@ const UserTheme = {
   second_color: "(125,190,150)",
   env_color: "",
   text_color: "000000",
+  task_btn_size: 50,
 }
 
 function createNode(NodeType,id){
@@ -29,12 +31,15 @@ function create_body(height) {
 }
 
 class GUI_Window {
-  constructor(width, height, z_index, name) {
+  constructor(width, height, z_index, name,IconURL) {
     (!name) ? this.name = "Window" : this.name = name
     this.width = width
     this.height = height
     this.z_index = z_index
+    this.visible = false
     this.body = create_body(height)
+    const task_bar_html_node = document.getElementById("task_bar")
+    this.task_btn = new Task_icon(UserTheme.task_btn_size,this.name,IconURL,task_bar_html_node,this)
     this.window = this.create()
   }
   create_tittle_bar() {
@@ -43,7 +48,7 @@ class GUI_Window {
     label_name.innerHTML = this.name
     const trafic_ligth = createNode("div","trafic_ligth")
     const btn_close = createNode("div","btn_close")
-    btn_close.addEventListener('click', (e) => desktop.removeChild(this.window))
+    btn_close.addEventListener('click', (e) => this.close())
     const btn_minimize = createNode("div","btn_minimize")
     trafic_ligth.appendChild(btn_close)
     trafic_ligth.appendChild(btn_minimize)
@@ -69,7 +74,12 @@ class GUI_Window {
     this.body.appendChild(div)
   }
   show() {
+    this.visible = true
     desktop.appendChild(this.window)
+  }
+  close(){   
+    desktop.removeChild(this.window)
+    this.task_btn.remove_task_bar()
   }
   reload_window(new_window) {
     desktop.replaceChild(new_window, this.window)
@@ -78,6 +88,14 @@ class GUI_Window {
   update_window(body) {
     this.window.replaceChild(body, this.body)
     this.body = body
+  }
+  hidden(){
+    this.visible = false
+    this.window.style.display = "none" 
+  }
+  unhidden(){
+    this.visible = true
+    this.window.style.display = "block"
   }
 }
 
@@ -122,4 +140,4 @@ function dragElement(elmnt) {
   }
 }
 
-module.exports = {UserTheme,rgb_add_opacity,create_body,desktop,GUI_Window,createNode,tittle_bar_height}
+export {UserTheme,rgb_add_opacity,create_body,desktop,GUI_Window,createNode,tittle_bar_height}
