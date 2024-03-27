@@ -22,6 +22,11 @@ function decipher_Storage(Storage) {
     return JSON.parse(aes_decipher(Storage, private_key))
 }
 
+function cipher_data(data){
+    const private_key = document.cookie.split("=")[1]
+    return aes_cipher(data,private_key)
+}
+
 function ShowContextMenuFile(e, node) {
     const menu = document.getElementById("contex-menu-file")
     menu.style.color = "#" + UserTheme.text_color
@@ -131,7 +136,7 @@ class Explorer extends GUI_Window {
 
     update_path(path) {
         this.path = path
-        const json_path = JSON.stringify({ path: this.path })
+        const json_path = JSON.stringify({ path: cipher_data(this.path) })
         fetch('/dir', {
             method: 'POST',
             headers: {

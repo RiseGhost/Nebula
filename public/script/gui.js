@@ -7500,6 +7500,11 @@ function decipher_Storage(Storage) {
     return JSON.parse((0,_aes__WEBPACK_IMPORTED_MODULE_2__.aes_decipher)(Storage, private_key))
 }
 
+function cipher_data(data){
+    const private_key = document.cookie.split("=")[1]
+    return (0,_aes__WEBPACK_IMPORTED_MODULE_2__.aes_cipher)(data,private_key)
+}
+
 function ShowContextMenuFile(e, node) {
     const menu = document.getElementById("contex-menu-file")
     menu.style.color = "#" + _gui_window__WEBPACK_IMPORTED_MODULE_0__.UserTheme.text_color
@@ -7609,7 +7614,7 @@ class Explorer extends _gui_window__WEBPACK_IMPORTED_MODULE_0__.GUI_Window {
 
     update_path(path) {
         this.path = path
-        const json_path = JSON.stringify({ path: this.path })
+        const json_path = JSON.stringify({ path: cipher_data(this.path) })
         fetch('/dir', {
             method: 'POST',
             headers: {

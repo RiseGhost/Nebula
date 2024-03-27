@@ -87,7 +87,7 @@ app.post('/dir', (req, res) => {
   const s = req.session
   if (s.auth) {
     var user_dir
-    (path) ? user_dir = __dirname + "/users_dir/" + s.user_id + path : user_dir = __dirname + "/users_dir/" + s.user_id
+    (path) ? user_dir = __dirname + "/users_dir/" + s.user_id + aes_decipher(path,s.client_key) : user_dir = __dirname + "/users_dir/" + s.user_id
     const json_dir = JSON.stringify(DirInfo(user_dir))
     res.json(aes_cipher(json_dir,s.client_key))
   }
