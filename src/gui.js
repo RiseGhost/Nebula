@@ -42,6 +42,4 @@ ss.show()
 
 new Explorer(400, 300, 90, "Explorer")
 
-console.log(document.cookie.split("="))
-
 addColumns(160, 0.85)

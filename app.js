@@ -1,4 +1,5 @@
 require('dotenv').config()
+const {aes_cipher, aes_decipher} = require('./src/aes');
 const { exec } = require('child_process')
 const express = require('express')
 const seccions = require('express-session')
@@ -6,8 +7,6 @@ const BodyParse = require('body-parser')
 const port = process.env.PORT
 const app = express()
 const getPort = require('./services/random_port')
-//const multer = require('multer');
-//const upload = multer();
 const CreateUser = require('./models/create')
 const { CheckUser } = require('./models/user')
 const { DirInfo, RenameFile } = require('./lib/index')
@@ -18,7 +17,6 @@ app.use(seccions({
   resave: false,
   saveUninitialized: false,
 }))
-//app.use(upload.none())
 app.use(express.static('public'))
 app.use(BodyParse.urlencoded({ extended: false }))
 app.use(BodyParse.json())
@@ -90,7 +88,8 @@ app.post('/dir', (req, res) => {
   if (s.auth) {
     var user_dir
     (path) ? user_dir = __dirname + "/users_dir/" + s.user_id + path : user_dir = __dirname + "/users_dir/" + s.user_id
-    res.json(DirInfo(user_dir))
+    const json_dir = JSON.stringify(DirInfo(user_dir))
+    res.json(aes_cipher(json_dir,s.client_key))
   }
   else
     res.json({ status: 401, msg: "This user not have Permissons" })

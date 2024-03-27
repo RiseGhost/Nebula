@@ -1,6 +1,6 @@
 import { UserTheme, rgb_add_opacity, create_body, desktop, GUI_Window, createNode, tittle_bar_height } from './gui_window'
 import Notify from './gui_notify'
-
+import { aes_cipher, aes_decipher } from './aes'
 
 function addHoverEffect(Node, HoverColor, DefaultColor) {
     Node.addEventListener('mouseover', (e) => Node.style.backgroundColor = HoverColor)
@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
+function decipher_Storage(Storage) {
+    const private_key = document.cookie.split("=")[1]
+    return JSON.parse(aes_decipher(Storage, private_key))
+}
 
 function ShowContextMenuFile(e, node) {
     const menu = document.getElementById("contex-menu-file")
@@ -134,9 +138,9 @@ class Explorer extends GUI_Window {
                 'Content-Type': 'application/json'
             },
             body: json_path
-        }).then(response => response.json()).then(Storage => {
+        }).then(response => response.json()).then(StorageCipher => {
             this.files_body.innerHTML = ""
-            Object.entries(Storage).forEach(element => {
+            Object.entries(decipher_Storage(StorageCipher)).forEach(element => {
                 const storage_element = createNode("div", "storage_element")
                 const Label_name = document.createElement("label")
                 Label_name.value = this.path
