@@ -1,3 +1,6 @@
+import { createNode } from "./gui_window"
+const desktop = document.getElementById("desktop")
+
 class Notify{
     constructor(width,height,X,Y,backgroundcolor,icon_url,msg){
         this.width = width
@@ -41,7 +44,8 @@ class Notify{
     }
 
     close(){
-        console.log("notify close")
         desktop.removeChild(this.window)
     }
 }
+
+export default Notify

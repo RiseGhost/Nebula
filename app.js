@@ -6,18 +6,19 @@ const BodyParse = require('body-parser')
 const port = process.env.PORT
 const app = express()
 const getPort = require('./services/random_port')
-const multer = require('multer');
-const upload = multer();
+//const multer = require('multer');
+//const upload = multer();
 const CreateUser = require('./models/create')
 const { CheckUser } = require('./models/user')
 const { DirInfo, RenameFile } = require('./lib/index')
+const { default: BigNumber } = require('bignumber.js')
 
 app.use(seccions({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false,
 }))
-app.use(upload.none())
+//app.use(upload.none())
 app.use(express.static('public'))
 app.use(BodyParse.urlencoded({ extended: false }))
 app.use(BodyParse.json())
@@ -31,10 +32,21 @@ app.get('/resgister', (req, res) => {
   res.sendFile('./views/resgister.html', { root: __dirname })
 })
 
+app.get('/key', (req, res) => {
+  const { cliente_public_key } = req.query
+  const randonNumber = BigNumber(parseInt(Math.random() * 20) + 10)
+  const i = new BigNumber(502013)
+  const p = new BigNumber(25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784406918290641249515082189298559149176184502808489120072844992687392807287776735971418347270261896375014971824691165077613379859095700097330459748808428401797429100642458691817195118746121515172654632282216869987549182422433637259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133844143603833904414952634432190114657544454178424020924616515723350778707749817125772467962926386356373289912154831438167899885040445364023527381951378636564391212010397122822120720357)
+  const public_key = i.pow(randonNumber).mod(p)
+  const secret_number = new BigNumber(cliente_public_key).pow(randonNumber).mod(p)
+  const private_key = secret_number.toString(16).substring(0, 32)
+  req.session.client_key = private_key
+  res.json({ public_key: public_key })
+})
+
 app.post('/r', CreateUser, (req, res) => {
   if (req.validat) {
     const port_user = getPort()
-    const key_port = getPort()
     const command = "node ./services/InitUserEnv.js " + port_user + " " + req.id
 
     exec(command, (error, stdout, stderr) => {
@@ -45,7 +57,6 @@ app.post('/r', CreateUser, (req, res) => {
 
     res.json({
       port_user: port_user,
-      key_port: key_port,
       status: "Create Sucess"
     })
   }
@@ -68,6 +79,7 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/desktop', (req, res) => {
+  console.log(req.session)
   if (!req.session.auth) res.sendStatus(401)
   res.sendFile("./views/desktop.html", { root: __dirname })
 })
@@ -84,13 +96,13 @@ app.post('/dir', (req, res) => {
     res.json({ status: 401, msg: "This user not have Permissons" })
 })
 
-app.post('/renamefile', (req,res) => {
+app.post('/renamefile', (req, res) => {
   const { path, name } = req.body
   const s = req.session
-  if (s.auth){
+  if (s.auth) {
     const user_dir_oldname = __dirname + "/users_dir/" + s.user_id + path
     const user_dir_newname = __dirname + "/users_dir/" + s.user_id + name
-    res.json({msg: RenameFile(user_dir_oldname,user_dir_newname)})
+    res.json({ msg: RenameFile(user_dir_oldname, user_dir_newname) })
   }
   else
     res.json({ status: 401, msg: "This user not have Permissons" })

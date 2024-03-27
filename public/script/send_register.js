@@ -5,10 +5,17 @@ E se connectar ao WebSocket que irá informar quando o porcesso se encontrar fin
 
 document.getElementById("res_form").addEventListener('submit', (e) => {
     e.preventDefault()
-    var formData = new FormData(document.getElementById("res_form"))
+    const json_data = JSON.stringify({
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+    })
     fetch('/r', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: json_data
     }).then((response) => response.json()).then(data => {
         console.log(data)
         console.log(data.port_user)
